@@ -9,23 +9,23 @@ const CourseItemDetails = () => {
   const {id} = useParams()
   const courseDetailsApiUrl = `https://apis.ccbp.in/te/courses/${id}`
 
-  useEffect(() => {
-    const fetchCourseDetails = async () => {
-      try {
-        const response = await fetch(courseDetailsApiUrl)
-        if (!response.ok) {
-          throw new Error('Failed to fetch course details')
-        }
-        const data = await response.json()
-        setCourseDetails(data.course_details)
-        setIsLoading(false)
-        setError(false)
-      } catch (error) {
-        console.error(error)
-        setIsLoading(false)
-        setError(true)
+  const fetchCourseDetails = async () => {
+    try {
+      const response = await fetch(courseDetailsApiUrl)
+      if (!response.ok) {
+        throw new Error('Failed to fetch course details')
       }
+      const data = await response.json()
+      setCourseDetails(data.course_details)
+      setIsLoading(false)
+      setError(false)
+    } catch (error1) {
+      console.error(error1)
+      setIsLoading(false)
+      setError(true)
     }
+  }
+  useEffect(() => {
     fetchCourseDetails()
   }, [id])
 

@@ -9,7 +9,7 @@ import './App.css'
 const App = () => (
   <Switch>
     <Route exact path="/" component={Home} />
-    <Route path="/courses/:id" component={CourseItemDetails} />
+    <Route exact path="/courses/:id" component={CourseItemDetails} />
     <Route path="/not-found" component={NotFound} />
     <Redirect to="not-found" />
   </Switch>

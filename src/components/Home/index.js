@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
 import Heading from '../Heading'
+import CourseItem from '../CourseItem'
+import TailSpin from 'react-loader-spinner'
+import './index.css'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -15,11 +17,16 @@ const Home = () => {
           throw new Error('Failed to fetch courses')
         }
         const data = await response.json()
-        setCourses(data.courses)
+        const updatedData = data.courses.map(each => ({
+          id: each.id,
+          logoUrl: each.logo_url,
+          name: each.name,
+        }))
+        setCourses(updatedData)
         setIsLoading(false)
         setError(false)
-      } catch (error) {
-        console.error(error)
+      } catch (error1) {
+        console.error(error1)
         setIsLoading(false)
         setError(true)
       }
@@ -31,33 +38,44 @@ const Home = () => {
   const handleRetry = () => {
     setIsLoading(true)
     setError(false)
-    // eslint-disable-next-line no-undef
     fetchCourses()
   }
 
   return (
     <div>
       {isLoading ? (
-        <p data-testid="loader">Loading</p>
+        <div>
+          <div data-testid="loader" className="spinner">
+            <TailSpin
+              height={80}
+              width={80}
+              color="#4fa94d"
+              ariaLabel="tail-spin-loading"
+              radius={1}
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+          </div>
+        </div>
       ) : error ? (
         <div>
-          <img src="failure-view-image-url" alt="failure view" />
+          <Heading />
+          <div>
+            <img src="failure-view-image-url" alt="failure view" />
+          </div>
           <h1>Oops! Something Went Wrong</h1>
           <p>We cannot seem to find the page you are looking for</p>
-          <button onClick={handleRetry}>Retry</button>
+          <button type="button" onClick={handleRetry}>
+            Retry
+          </button>
         </div>
       ) : (
         <div>
           <Heading />
           <h1>Courses</h1>
-          <ul>
+          <ul className="war">
             {courses.map(course => (
-              <button type="button" key={course.id}>
-                <Link to={`/courses/${course.id}`}>
-                  <img src={course.logo_url} alt={course.name} />
-                  {course.name}
-                </Link>
-              </button>
+              <CourseItem key={course.id} details={course} />
             ))}
           </ul>
         </div>
